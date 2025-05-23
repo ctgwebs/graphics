@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb"
-import { hash } from "bcrypt"
+import { hash } from "bcryptjs" // Changed from bcrypt to bcryptjs
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/design-templates"
 

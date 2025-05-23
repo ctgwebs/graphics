@@ -1,6 +1,6 @@
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { compare } from "bcrypt"
+import { compare } from "bcryptjs" // Changed from bcrypt to bcryptjs
 import clientPromise from "@/lib/db"
 import type { User } from "@/lib/models"
 
