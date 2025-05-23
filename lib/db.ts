@@ -1,0 +1,40 @@
+import { MongoClient, ObjectId } from "mongodb"
+
+// MongoDB connection string from environment variable
+const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/design-templates"
+
+let client: MongoClient
+let clientPromise: Promise<MongoClient>
+
+if (!process.env.MONGODB_URI) {
+  throw new Error("Please add your MongoDB URI to .env.local")
+}
+
+if (process.env.NODE_ENV === "development") {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  const globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>
+  }
+
+  if (!globalWithMongo._mongoClientPromise) {
+    client = new MongoClient(uri)
+    globalWithMongo._mongoClientPromise = client.connect()
+  }
+  clientPromise = globalWithMongo._mongoClientPromise
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri)
+  clientPromise = client.connect()
+}
+
+export default clientPromise
+
+// Helper function to convert MongoDB ObjectId to string and vice versa
+export function objectIdToString(id: ObjectId): string {
+  return id.toString()
+}
+
+export function stringToObjectId(id: string): ObjectId {
+  return new ObjectId(id)
+}
